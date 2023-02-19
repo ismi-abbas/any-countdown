@@ -10,13 +10,17 @@ dayjs.extend(duration)
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
-  const [date, setDate] = useState(dayjs(Date.now()))
+  const [endTime, setEndTime] = useState('')
   const [timeLeft, setTimeLeft] = useState(0)
   const [isRunning, setIsRunning] = useState(false)
   const [title, setTitle] = useState('')
+  const [days, setDays] = useState(0)
+  const [hours, setHours] = useState(0)
+  const [minutes, setMinutes] = useState(0)
+  const [seconds, setSeconds] = useState(0)
 
   const handleEndTimeChange = (e: any) => {
-    setDate(dayjs(e.target.value))
+    setEndTime(e.target.value)
   }
 
   const handleStartClick = () => {
@@ -28,19 +32,35 @@ export default function Home() {
   }
 
   useEffect(() => {
-    if (!date.isValid() || !isRunning) return
+    if (!isRunning) {
+      return // exit early if the countdown hasn't started yet
+    }
 
-    // Save intervalId to clear the interval when the component unmounts
-    const intervalId = setInterval(() => {
-      const diff = date.diff(dayjs(Date.now()), 'milliseconds')
-      setTimeLeft(diff)
+    const target = dayjs(endTime)
+    const interval: any = setInterval(() => {
+      const now = dayjs()
+      const difference = target.diff(now)
+
+      if (difference < 0) {
+        // countdown is complete
+        setIsRunning(false)
+        setTimeLeft(0)
+        return clearInterval(interval)
+      }
+
+      setTimeLeft(difference)
     }, 1000)
 
-    // Clear interval on unmount
-    return () => clearInterval(intervalId)
-  }, [date, isRunning])
+    return () => clearInterval(interval)
+  }, [endTime, isRunning])
 
-  const formattedTimeLeft = dayjs(timeLeft).format('HH:mm:ss:SSS')
+  useEffect(() => {
+    const duration = dayjs.duration(timeLeft)
+    setDays(duration.days())
+    setHours(duration.hours())
+    setMinutes(duration.minutes())
+    setSeconds(duration.seconds())
+  }, [timeLeft])
 
   return (
     <>
@@ -90,7 +110,14 @@ export default function Home() {
               Start Countdown
             </button>
             <h1 className="text-2xl font-semibold py-3">Time left</h1>
-            <h3 className="text-xl">{formattedTimeLeft}</h3>
+            {timeLeft === 0 ? (
+              'Done'
+            ) : (
+              <div className="text-5xl">
+                <span>{days} Days</span> <span>{hours} Hours</span>{' '}
+                <span>{minutes} Minutes</span> <span>{seconds} Seconds</span>
+              </div>
+            )}
           </div>
         </div>
       </main>
