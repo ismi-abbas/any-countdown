@@ -19,21 +19,20 @@ export default function Home() {
   const [minutes, setMinutes] = useState(0)
   const [seconds, setSeconds] = useState(0)
 
-  const handleEndTimeChange = (e: any) => {
-    setEndTime(e.target.value)
-  }
-
-  const handleStartClick = () => {
+  const handleSubmit = (e: any) => {
+    console.log({
+      title: e.target.title.value,
+      endtime: e.target.endtime.value
+    })
+    e.preventDefault()
+    setTitle(e.target.title.value)
+    setEndTime(e.target.endtime.value)
     setIsRunning(true)
-  }
-
-  const handleTitleChange = (e: any) => {
-    setTitle(e.target.value)
   }
 
   useEffect(() => {
     if (!isRunning) {
-      return // exit early if the countdown hasn't started yet
+      return
     }
 
     const target = dayjs(endTime)
@@ -72,53 +71,49 @@ export default function Home() {
       </Head>
       <main className={inter.className}>
         <div className="grid grid-rows-1">
-          <div className="text-center text-3xl font-bold px-24 py-20">
-            <h1>any-countdown</h1>
-          </div>
-          <div className="grid grid-rows-1">
-            <div className="text-center py-1">
-              <label htmlFor="end-time">End Time</label>
-              <div>
-                <input
-                  type="datetime-local"
-                  id="end-time"
-                  onChange={handleEndTimeChange}
-                />
-              </div>
+          <form className="text-center py-4" onSubmit={handleSubmit}>
+            <div className="text-center text-3xl font-bold px-24 py-20">
+              <h1>any-countdown</h1>
             </div>
-          </div>
-          <div className="grid grid-rows-1">
-            <div>
-              <div className="text-center py-4">
-                <label htmlFor="end-time">Title</label>
+            <div className="grid grid-rows-1">
+              <div className="text-center py-1">
+                <label htmlFor="end-time">End Time</label>
                 <div>
                   <input
-                    className="border p-2 rounded-md hover:border-green-500 mt-2"
-                    type="text"
-                    id="text"
-                    onChange={handleTitleChange}
+                    type="datetime-local"
+                    id="endtime"
                   />
                 </div>
               </div>
             </div>
-          </div>
-          <div className="text-center py-1">
+            <div >
+              <label htmlFor="title">Title</label>
+              <div>
+                <input
+                  className="border p-2 rounded-md hover:border-green-500 mt-2"
+                  type="text"
+                  id="title"
+                />
+              </div>
+            </div>
             <button
               className="mt-2 border p-2 rounded-md hover:border-green-500"
-              onClick={handleStartClick}
             >
               Start Countdown
             </button>
-            <h1 className="text-2xl font-semibold py-3">Time left</h1>
-            {timeLeft === 0 ? (
-              'Done'
-            ) : (
-              <div className="text-5xl">
-                <span>{days} Days</span> <span>{hours} Hours</span>{' '}
-                <span>{minutes} Minutes</span> <span>{seconds} Seconds</span>
-              </div>
-            )}
-          </div>
+          </form>
+        </div>
+        {/* View */}
+        <div className="text-center py-1">
+          <h1 className="text-2xl font-semibold py-3">{title}</h1>
+          {timeLeft === 0 ? (
+            <div>Done</div>
+          ) : (
+            <div className="text-5xl">
+              <span>{days} Days</span> <span>{hours} Hours</span>{' '}
+              <span>{minutes} Minutes</span> <span>{seconds} Seconds</span>
+            </div>
+          )}
         </div>
       </main>
     </>
