@@ -70,48 +70,50 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={inter.className}>
-        <div className="grid grid-rows-1">
-          <form className="text-center py-4" onSubmit={handleSubmit}>
-            <div className="text-center text-3xl font-bold px-24 py-20">
-              <h1>any-countdown</h1>
-            </div>
-            <div className="grid grid-rows-1">
-              <div className="text-center py-1">
-                <label htmlFor="end-time">End Time</label>
+        <div className="text-center text-3xl font-bold px-24 py-20">
+          <h1>any-countdown</h1>
+        </div>
+        {!isRunning ? (
+          <div className="grid grid-rows-1">
+            <form className="text-center py-4" onSubmit={handleSubmit}>
+              <div className="grid grid-rows-1">
+                <div className="text-center py-1">
+                  <label htmlFor="end-time">End Time</label>
+                  <div>
+                    <input
+                      type="datetime-local"
+                      id="endtime"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div >
+                <label htmlFor="title">Title</label>
                 <div>
                   <input
-                    type="datetime-local"
-                    id="endtime"
+                    className="border p-2 rounded-md hover:border-green-500 mt-2"
+                    type="text"
+                    id="title"
                   />
                 </div>
               </div>
-            </div>
-            <div >
-              <label htmlFor="title">Title</label>
-              <div>
-                <input
-                  className="border p-2 rounded-md hover:border-green-500 mt-2"
-                  type="text"
-                  id="title"
-                />
-              </div>
-            </div>
-            <button
-              className="mt-2 border p-2 rounded-md hover:border-green-500"
-            >
-              Start Countdown
-            </button>
-          </form>
-        </div>
+              <button
+                className="mt-2 border p-2 rounded-md hover:border-green-500"
+              >
+                Start Countdown
+              </button>
+            </form>
+          </div>
+        ) : <div></div>}
         {/* View */}
         <div className="text-center py-1">
           <h1 className="text-2xl font-semibold py-3">{title}</h1>
-          {timeLeft === 0 ? (
+          {timeLeft < 1 ? (
             <div>Done</div>
           ) : (
             <div className="text-5xl">
-              <span>{days} Days</span> <span>{hours} Hours</span>{' '}
-              <span>{minutes} Minutes</span> <span>{seconds} Seconds</span>
+              <span>{days != 0 ? days : null} Days</span> <span>{hours != 0 ? hours : null} Hours</span>{' '}
+              <span>{minutes != 0 ? minutes : null} Minutes</span> <span>{seconds != 0 ? seconds : null} Seconds</span>
             </div>
           )}
         </div>
